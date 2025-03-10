@@ -2,6 +2,7 @@ import requests
 import os
 from datetime import datetime, timedelta
 
+
 # Dossier où enregistrer les emplois du temps
 DATA_DIR = "./edt_data"
 os.makedirs(DATA_DIR, exist_ok=True)
@@ -74,7 +75,11 @@ for group, resource_id in RESOURCES.items():
 
 print("📁", compteur, "/", len(RESOURCES), " emplois du temps ont été téléchargés.")
 
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 import subprocess
+
+subprocess.run("eval $(ssh-agent -s) && ssh-add ~/.ssh/id_ed25519", shell=True)
 
 subprocess.run(["git", "add", "edt_data/*.ics"])
 
