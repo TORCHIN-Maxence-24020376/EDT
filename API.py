@@ -74,15 +74,3 @@ for group, resource_id in RESOURCES.items():
         print(f"❌ Erreur {response.status_code} pour {group}")
 
 print("📁", compteur, "/", len(RESOURCES), " emplois du temps ont été téléchargés.")
-
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
-
-import subprocess
-
-subprocess.run("eval $(ssh-agent -s) && ssh-add ~/.ssh/id_ed25519", shell=True)
-
-subprocess.run(["git", "add", "edt_data/*.ics"])
-
-subprocess.run(["git", "commit", "-m", "Mise à jour automatique des emplois du temps"])
-
-subprocess.run(["git", "push", "origin", "main"])
