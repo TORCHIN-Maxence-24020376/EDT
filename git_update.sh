@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 eval $(ssh-agent -s)
 ssh-add /home/max/.ssh/id_ed25519
 
