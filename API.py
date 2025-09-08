@@ -29,6 +29,9 @@ RESOURCES = {
     "3A2-2" : "42529",
     "3B-1" : "42530",
     "3B-2" : "42531,",
+    # Maintenant nous passons aux emplois du temps personnalisés
+    "NEVOT": "72627",
+    
 }
 
 compteur = 0
