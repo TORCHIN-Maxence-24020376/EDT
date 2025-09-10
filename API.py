@@ -31,7 +31,8 @@ RESOURCES = {
     "3B-2" : "42531,",
     # Maintenant nous passons aux emplois du temps personnalisés
     "NEVOT": "72627",
-    "NICOLAS": "197802",
+    "NICOLAS": "105296",
+    "NINA": "1362",
 }
 
 compteur = 0
@@ -46,8 +47,8 @@ else:
 aujourdhui = datetime.today()
 annee_actuelle = aujourdhui.year
 
-# Si on est après juin, on télécharge pour l'année scolaire suivante
-if aujourdhui.month > 6:
+# Si on est après aout, on télécharge pour l'année scolaire suivante
+if aujourdhui.month > 8:
     annee_debut = annee_actuelle
     annee_fin = annee_actuelle + 1
 else:
@@ -55,32 +56,42 @@ else:
     annee_fin = annee_actuelle
 
 date_debut = f"{annee_debut}-09-01"  # 1er septembre
-date_fin = f"{annee_fin}-06-30"  # 30 juin
+date_fin = f"{annee_fin}-08-30"  # 30 aout
 
 BASE_URL = "https://ade-web-consult.univ-amu.fr/jsp/custom/modules/plannings/anonymous_cal.jsp"
 
 # Télécharger chaque emploi du temps
-for group, resource_id in RESOURCES.items():
+def telecharger_edt(group, resource_id, retries=2):
     url = f"{BASE_URL}?projectId={PROJECT_ID}&resources={resource_id}&calType=ical&firstDate={date_debut}&lastDate={date_fin}"
-    
-    print(f"🔍 Téléchargement de l'EDT pour {group} depuis {url}")
-    response = requests.get(url)
+    file_path = os.path.join(DATA_DIR, f"{group}.ics")
 
-    if response.status_code == 200:
-        file_path = os.path.join(DATA_DIR, f"{group}.ics")
-        with open(file_path, "wb") as f:
-            f.write(response.content)
-        print(f"✅ {group}.ics téléchargé avec succès !")
+    for tentative in range(retries):
+        print(f"🔍 Téléchargement de l'EDT pour {group} (tentative {tentative+1}) depuis {url}")
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            content = response.content
+            if content.startswith(b"BEGIN:VCALENDAR"):
+                with open(file_path, "wb") as f:
+                    f.write(content)
+                print(f"✅ {group}.ics téléchargé et vérifié avec succès !")
+                return True
+            else:
+                print(f"⚠️ {group}.ics invalide (ne commence pas par BEGIN:VCALENDAR), nouvelle tentative...")
+        else:
+            print(f"❌ Erreur {response.status_code} pour {group}")
+
+    print(f"⛔ Impossible d'obtenir un fichier valide pour {group} après {retries} tentatives.")
+    return False
+
+for group, resource_id in RESOURCES.items():
+    if telecharger_edt(group, resource_id):
         compteur += 1
-    else:
-        print(f"❌ Erreur {response.status_code} pour {group}")
 
-print("📁", compteur, "/", len(RESOURCES), " emplois du temps ont été téléchargés.")
+print("📁", compteur, "/", len(RESOURCES), " emplois du temps valides ont été téléchargés.")
 
 import subprocess
 
 subprocess.run(["git", "add", "edt_data/*.ics"])
-
 subprocess.run(["git", "commit", "-m", "Mise à jour automatique des emplois du temps"])
-
 subprocess.run(["git", "push", "origin", "main"])
