@@ -1,6 +1,6 @@
 [
   {
     "alert": true,
-    "message": "Emploi du temps compromis. Veuillez vous fier à ADE ou d'autres plateforme d'emploi du temps."
+    "message": "Des pannes peuvent être occasionnées sur la visualisation des EDT, en cas de doutes, référrez vous à d'autres services d'emploi du temps."
   }
 ]
