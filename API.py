@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 DATA_DIR = "./edt_data"
 os.makedirs(DATA_DIR, exist_ok=True)
 
-PROJECT_ID = 8
+PROJECT_ID = 4
 RESOURCES = {
     #Nom du groupe : ID du groupe
     "1G1A": "8385",
@@ -31,8 +31,6 @@ RESOURCES = {
     "3B-2" : "42531,",
     # Maintenant nous passons aux emplois du temps personnalisés
     "NEVOT": "72627",
-    "NICOLAS": "105296",
-    "NINA": "1362",
 }
 
 compteur = 0
@@ -47,8 +45,8 @@ else:
 aujourdhui = datetime.today()
 annee_actuelle = aujourdhui.year
 
-# Si on est après aout, on télécharge pour l'année scolaire suivante
-if aujourdhui.month > 8:
+# Si on est en août ou plus tard, on télécharge pour l'année scolaire suivante
+if aujourdhui.month >= 8:
     annee_debut = annee_actuelle
     annee_fin = annee_actuelle + 1
 else:
@@ -58,7 +56,7 @@ else:
 date_debut = f"{annee_debut}-09-01"  # 1er septembre
 date_fin = f"{annee_fin}-08-30"  # 30 aout
 
-BASE_URL = "https://ade-web-consult.univ-amu.fr/jsp/custom/modules/plannings/anonymous_cal.jsp"
+BASE_URL = "https://agenda-web-consult.univ-amu.fr/jsp/custom/modules/plannings/anonymous_cal.jsp"
 
 # Télécharger chaque emploi du temps
 def telecharger_edt(group, resource_id, retries=2):

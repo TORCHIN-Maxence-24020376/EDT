@@ -1,6 +1,6 @@
 [
   {
-    "alert": true,
+    "alert": false,
     "message": "Des pannes peuvent être occasionnées sur la visualisation des EDT, en cas de doutes, référrez vous à d'autres services d'emploi du temps."
   }
 ]
