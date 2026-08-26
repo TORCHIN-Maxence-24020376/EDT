@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 DATA_DIR = "./edt_data"
 os.makedirs(DATA_DIR, exist_ok=True)
 
-PROJECT_ID = 4
+PROJECT_ID = 8
 RESOURCES = {
     #Nom du groupe : ID du groupe
     "1G1A": "8385",
